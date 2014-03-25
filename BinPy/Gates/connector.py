@@ -1,17 +1,43 @@
 class Connector:
 
-	state = 0 # To store the state of the connection
-	
+    def __init__(self, state=None):
+        self.connections = {"output": [], "input": []}
+            # To store the all the taps onto this connection
+        self.state = state  # To store the state of the connection
+        self.oldstate = None
 
-	def __init__(self):
-		self.connections = list() # To store the all the taps onto this connection
+    def tap(self, element, mode):
+        # Can't serve output for multiple devices
+        if mode == "output":
+            self.connections["output"] = []
 
-	def tap(self,element,mode):
-		self.connections.append([element,mode]) # Add an element to the connections list
-		
-	#This fucntion is called when the value of the connection changes
-	def trigger(self):
+        if element not in self.connections[mode]:
+            self.connections[mode].append(
+                element)  # Add an element to the connections list
 
-		for i in self.connections:
-			if i[1] == 'input':
-				i[0].trigger()
+    # This function is called when the value of the connection changes
+    def trigger(self):
+        for i in self.connections["input"]:
+            i.trigger()
+
+    def __call__(self):
+        return self.state
+
+    # Overloads the bool method
+    # For python3
+    def __bool__(self):
+        return True if self.state == 1 else False
+
+    # To be compatible with Python 2.x
+    __nonzero__ = __bool__
+
+    # Overloads the int() method
+    def __int__(self):
+        return self.state
+
+    def __repr__(self):
+        return str(self.state)
+
+    def __str__(self):
+        return "Connector; State: " + str(self.state)
+

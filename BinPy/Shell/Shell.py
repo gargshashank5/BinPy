@@ -1,3 +1,4 @@
+from __future__ import print_function
 import subprocess
 import platform
 import os
@@ -8,10 +9,12 @@ try:
 except ImportError:
     BINPY_VERSION = ""
 
+
 def shellclear():
     if platform.system() == "Windows":
         return
     subprocess.call("clear")
+
 
 def magic_clear(self, arg):
     shellclear()
@@ -29,6 +32,7 @@ banner += '\n'
 
 exit_msg = '\n... [Exiting the BinPy interactive shell] ...\n'
 
+
 def self_update():
     URL = "https://github.com/binpy/binpy/zipball/master"
     command = "pip install -U %s" % URL
@@ -38,6 +42,7 @@ def self_update():
 
     returncode = subprocess.call(command, shell=True)
     sys.exit()
+
 
 def setupIpython():
     try:
@@ -65,16 +70,17 @@ def setupIpython():
 
     return bpyShell()
 
+
 def shellMain(*args):
     log_level = logging.WARNING
     interface = None
 
     if len(sys.argv) > 1 and len(sys.argv[1]) > 1:
         flag = sys.argv[1]
-        print flag
+        print (flag)
 
         if flag == 'update':
-            print "Updating BinPy..."
+            print ("Updating BinPy...")
             self_update()
 
         if flag in ['--nowarnings', 'nowarnings']:
@@ -85,5 +91,3 @@ def shellMain(*args):
     init_logging(log_level)
     shellclear()
     bpyShell = setupIpython()
-
-            
